@@ -9,13 +9,17 @@
     "astro": "astro",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
-    "db:reset": "supabase db reset"
+    "db:reset": "supabase db reset",
+    "check_query": "node check_query.js"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.6",
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.6.0",
+    "@supabase/supabase-js": "^2.57.4",
     "astro": "^5.13.10",
+    "astro-embed": "^0.9.1",
+    "dotenv": "^17.2.2",
     "sharp": "^0.34.3"
   },
   "devDependencies": {

@@ -1,19 +1,100 @@
+import 'dotenv/config';
 import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { fetchESGAllVideos, fetchESGAllOrgs, fetchESGAllPresenters } from "./services/esg-data"
 
-const blog = defineCollection({
-	// Load Markdown and MDX files in the `src/content/blog/` directory.
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
-	// Type-check frontmatter using a schema
-	schema: ({ image }) =>
-		z.object({
-			title: z.string(),
-			description: z.string(),
-			// Transform string to Date object
-			pubDate: z.coerce.date(),
-			updatedDate: z.coerce.date().optional(),
-			heroImage: image().optional(),
-		}),
+const video = defineCollection({
+  loader: async () => await fetchESGAllVideos() as any,
+  schema: z.object({
+    id: z.string(),
+    videoId: z.string(),
+    videoTitle: z.string(),
+    videoDescription: z.string(),
+    publishedAt: z.string(),
+    thumbnailDefault: z.string().nullable(),
+    thumbnailMedium: z.string().nullable(),
+    thumbnailHigh: z.string().nullable(),
+    slug: z.string(),
+    organizations: z.array(
+      z.object({
+        id: z.string(),
+        orgTitle: z.string(),
+        orgDescription: z.string().nullable(),
+        website: z.string().nullable(),
+        twitter: z.string().nullable(),
+        logoImage: z.string().nullable(),
+        contactPerson: z.string().nullable(),
+        slug: z.string(),
+      })
+    ),
+    presenters: z.array(
+      z.object({
+        id: z.string(),
+        presenterName: z.string(),
+        presenterDescription: z.string().nullable(),
+        presenterByline: z.string().nullable(),
+        twitter: z.string().nullable(),
+        email: z.string().nullable(),
+        website: z.string().nullable(),
+        imageUrl: z.string().nullable(),
+        slug: z.string(),
+      })
+    ),
+  }),
 });
 
-export const collections = { blog };
+const organization = defineCollection({
+  loader: async () => await fetchESGAllOrgs() as any,
+  schema: z.object({
+    id: z.string(),
+    orgTitle: z.string(),
+    orgDescription: z.string().nullable(),
+    website: z.string().nullable(),
+    twitter: z.string().nullable(),
+    logoImage: z.string().nullable(),
+    contactPerson: z.string().nullable(),
+    slug: z.string(),
+    videos: z.array(
+      z.object({
+        id: z.string(),
+        videoId: z.string(),
+        videoTitle: z.string(),
+        videoDescription: z.string(),
+        publishedAt: z.string(),
+        thumbnailDefault: z.string().nullable(),
+        thumbnailMedium: z.string().nullable(),
+        thumbnailHigh: z.string().nullable(),
+        slug: z.string(),
+      })
+    ),
+  }),
+});
+
+const presenter = defineCollection({
+  loader: async () => await fetchESGAllPresenters() as any,
+  schema: z.object({
+    id: z.string(),
+    presenterName: z.string(),
+    presenterDescription: z.string().nullable(),
+    presenterByline: z.string().nullable(),
+    twitter: z.string().nullable(),
+    email: z.string().nullable(),
+    website: z.string().nullable(),
+    imageUrl: z.string().nullable(),
+    slug: z.string(),
+    videos: z.array(
+      z.object({
+        id: z.string(),
+        videoId: z.string(),
+        videoTitle: z.string(),
+        videoDescription: z.string(),
+        publishedAt: z.string(),
+        thumbnailDefault: z.string().nullable(),
+        thumbnailMedium: z.string().nullable(),
+        thumbnailHigh: z.string().nullable(),
+        slug: z.string(),
+      })
+    ),
+  }),
+});
+
+export const collections = { video, organization, presenter };
