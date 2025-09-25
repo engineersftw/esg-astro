@@ -52,6 +52,34 @@ All commands are run from the root of the project, from a terminal:
 | `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
+| `npm run db:start`        | Start the Supabase Local Dev                     |
+| `npm run db:stop`         | Stops the Supabase Local Dev                     |
+
+## Preparing the Dev Database
+
+1. Start Supabase local
+
+    ```bash
+    npm run db:start
+    ```
+
+    > Note the Secret key
+
+2. Import the backup file:
+
+    ```
+    psql -d postgresql://postgres:postgres@127.0.0.1:54322/postgres -f ./db_cluster-06-06-2025.backup
+    ```
+
+    > **Note:** You may need to install Postgres to get the `psql` CLI.
+
+3. Update `.env` with the Secret Key. (If `.env` is not available, copy `env.example` to `.env` and update the contents).
+
+4. To stop the Supabase local
+
+    ```bash
+    npm run db:stop
+    ```
 
 ## 👀 Want to learn more?
 
